@@ -139,6 +139,38 @@ router.route('/enrollment/get/:id').get((req, res) => {
     }
 });
 
+
+// Update Progress details (Pass enrollment id as params)
+
+router.route('/enrollment/progress/update/:id').patch((req, res) => {
+    const _id = req.params.id
+    const progressData = {
+        courseId: req.body.courseId,
+        userId: req.body.userId,
+        progress: req.body.progress,
+    };
+
+    try {
+        prisma.enrollment.update({
+            where: {
+                id: _id
+            },
+            data: progressData
+        }).then((data) => {
+            if (data) {
+                res.status(200).json({ status: true, message: "Progress Updated Sucessfully", data: data, code: "200" })
+            }
+            else {
+                res.status(404).json({ status: false, message: "Progress not found", code: "404" })
+            }
+        })
+    } catch (error) {
+        res.status(500).json({ status: false, message: "Error occured while updating Progress", code: "500" })
+    }
+});
+
+
+
 // Update Enrollment details
 
 router.route('/enrollment/update/:id').patch((req, res) => {
